@@ -6,6 +6,8 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
+import modelo.compruebaLexico;
+
 public class Interfaz extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 8477793022822429026L;
 	
@@ -55,7 +57,7 @@ public class Interfaz extends JFrame implements ActionListener {
 		//Panel izquierdo
 		panelDerecho = new JPanel(new GridLayout(0, 1));
 		
-		txtAreaErrores = new JTextArea("Error léxico en la linea 14 Columna 102, Ejempl2@* ");
+		txtAreaErrores = new JTextArea();
 		txtAreaErrores.setOpaque(false);
 		txtAreaErrores.setEditable(false);
 		txtAreaErrores.setBorder(new EmptyBorder(20,20,10,0));
@@ -67,7 +69,7 @@ public class Interfaz extends JFrame implements ActionListener {
 		panelDerecho.add(txtAreaErrores);
 		
 		panelCodigoErrores = new JPanel(new BorderLayout());
-		lblCodigoFuente = new JLabel("Código Fuente");
+		lblCodigoFuente = new JLabel("CÃ³digo Fuente");
 		lblCodigoFuente.setBorder(new EmptyBorder(10,10,10,0));
 		panelCodigoErrores.add(lblCodigoFuente, BorderLayout.NORTH);
 		panelCodigoErrores.add(panelDerecho);
@@ -84,10 +86,7 @@ public class Interfaz extends JFrame implements ActionListener {
 			int choice = chooser.showOpenDialog(this);
 			if (choice != JFileChooser.APPROVE_OPTION) return;
 				archivoElegido = chooser.getSelectedFile();
-		}
-		if(e.getSource().equals(btnAnalisisLexico)) { 
-			//Aqui va el codigo para el analisis lexico
-			FileInputStream fis = null;
+				FileInputStream fis = null;
 	        String resultado = "";
 
 	        try {
@@ -97,9 +96,6 @@ public class Interfaz extends JFrame implements ActionListener {
 	                // convert to char and display it
 	                resultado += (char) contenido;
 	            }
-
-	            txtCodigoFuente.setText(resultado);
-
 	        } catch (IOException ex) {
 	            ex.printStackTrace();
 	        } finally {
@@ -110,6 +106,29 @@ public class Interfaz extends JFrame implements ActionListener {
 	                ex.printStackTrace();
 	            }
 	        }
+			
+			txtCodigoFuente.setText(resultado);
+		}
+		if(e.getSource().equals(btnAnalisisLexico)) { 
+			//Aqui va el codigo para el analisis lexico
+			txtAreaErrores.setText("");
+				//iniciar analisis lexico
+				compruebaLexico analizador = new compruebaLexico();
+				String tipo;
+				String[] lineas = txtCodigoFuente.getText().split("\\n+");	
+				int i = 0;		
+				for (String linea : lineas) {
+					String[] tokens = linea.split("\\s+");
+					i++;
+					for(String token : tokens){
+						tipo=analizador.analizadorDeTokens(token);
+						if(tipo==null){
+							txtAreaErrores.setText(txtAreaErrores.getText()+"\nError lexico en la linea "+i+". <"+ token+"> es invalido.");
+							this.revalidate();
+							this.repaint();
+						}
+					}
+				}
 	        
 		}
 	}
