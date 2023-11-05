@@ -69,7 +69,7 @@ public class Interfaz extends JFrame implements ActionListener {
 		panelDerecho.add(txtAreaErrores);
 		
 		panelCodigoErrores = new JPanel(new BorderLayout());
-		lblCodigoFuente = new JLabel("CÃ³digo Fuente");
+		lblCodigoFuente = new JLabel("Codigo Fuente");
 		lblCodigoFuente.setBorder(new EmptyBorder(10,10,10,0));
 		panelCodigoErrores.add(lblCodigoFuente, BorderLayout.NORTH);
 		panelCodigoErrores.add(panelDerecho);
@@ -120,6 +120,9 @@ public class Interfaz extends JFrame implements ActionListener {
 				for (String linea : lineas) {
 					String[] tokens = linea.split("\\s+");
 					i++;
+					//separar caracteres especiales
+					linea = extracted(linea);
+
 					for(String token : tokens){
 						tipo=analizador.analizadorDeTokens(token);
 						if(tipo==null){
@@ -128,8 +131,19 @@ public class Interfaz extends JFrame implements ActionListener {
 							this.repaint();
 						}
 					}
+
 				}
 	        
 		}
+	}
+	private String extracted(String linea) {
+		linea=linea.replace("{", " { ");
+		linea=linea.replace("}", " } ");
+		linea=linea.replace("(", " ( ");
+		linea=linea.replace(")", " ) ");
+		linea=linea.replace(")", " ) ");
+		linea=linea.replace("[", " [ ");
+		linea=linea.replace("]", " ] ");
+		return linea;
 	}
 }

@@ -38,6 +38,13 @@ public class compruebaLexico {
                  //relaop : <, >, <=, >=
                  keywordsAndOperatorsMap.put("==" , "eqltop");
                 keywordsAndOperatorsMap.put("!=" , "eqltop");
+
+                keywordsAndOperatorsMap.put("{" , "codeblock");
+                keywordsAndOperatorsMap.put("}" , "codeblock");
+                keywordsAndOperatorsMap.put("(" , "codeblock");
+                keywordsAndOperatorsMap.put(")" , "codeblock");
+                keywordsAndOperatorsMap.put("[" , "codeblock");
+                keywordsAndOperatorsMap.put("]" , "codeblock");
                  //eqltop : == , != 
                 
         }
