@@ -45,7 +45,8 @@ public class compruebaLexico {
                 keywordsAndOperatorsMap.put(")" , "codeblock");
                 keywordsAndOperatorsMap.put("[" , "codeblock");
                 keywordsAndOperatorsMap.put("]" , "codeblock");
-                 //eqltop : == , != 
+
+                //keywordsAndOperatorsMap.put("=" , "assignop");
                 
         }
         

@@ -2,6 +2,7 @@ package vista;
 
 import java.awt.event.*;
 import java.io.*;
+import java.util.Vector;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.*;
@@ -17,10 +18,15 @@ public class Interfaz extends JFrame implements ActionListener {
 	private JLabel lblTablaSimbolos, lblCodigoFuente;
 	private JTextArea txtCodigoFuente, txtAreaErrores;
 	private File archivoElegido;
+	private int cuentaIDs;
+	private Vector<String> ids;
 	
 	public Interfaz() {
 		super("Analizador de lenguaje");
 		
+		cuentaIDs=0;
+		ids=new Vector<String>();
+
 		hazInterfaz();
 		hazEscuchas();
 	}
@@ -39,7 +45,14 @@ public class Interfaz extends JFrame implements ActionListener {
 		//Panel izquierdo
 		lblTablaSimbolos = new JLabel("Tabla de Simbolos");
 		lblTablaSimbolos.setBorder(new EmptyBorder(10,10,10,0));
-		tablaSimbolos = new JTable();
+
+		tablaSimbolos = new JTable(100,2); //tabla de ids
+		tablaSimbolos.setShowGrid(false);
+		tablaSimbolos.setEnabled(false);
+		tablaSimbolos.getColumnModel().getColumn(0).setHeaderValue("Identificador");
+		tablaSimbolos.getColumnModel().getColumn(1).setHeaderValue("Valor");
+		JScrollPane scroll = new JScrollPane(tablaSimbolos);	
+
 		btnArchivos = new JButton("Abrir archivo");
 		panelBotones.add(btnArchivos);
 		
@@ -52,21 +65,25 @@ public class Interfaz extends JFrame implements ActionListener {
 		
 		panelIzquierdo.add(lblTablaSimbolos, BorderLayout.NORTH);
 		panelIzquierdo.add(panelBotones, BorderLayout.SOUTH);
-		panelIzquierdo.add(tablaSimbolos);
+		panelIzquierdo.add(scroll); //esto es la tabla de simbolos
 		
 		//Panel izquierdo
 		panelDerecho = new JPanel(new GridLayout(0, 1));
 		
+		
+
+		txtCodigoFuente = new JTextArea();
+		txtCodigoFuente.setBorder(new LineBorder(Color.black));
+		JScrollPane scroll1 = new JScrollPane(txtCodigoFuente);	
+
 		txtAreaErrores = new JTextArea();
 		txtAreaErrores.setOpaque(false);
 		txtAreaErrores.setEditable(false);
 		txtAreaErrores.setBorder(new EmptyBorder(20,20,10,0));
+		JScrollPane scroll2 = new JScrollPane(txtAreaErrores);	
 
-		txtCodigoFuente = new JTextArea();
-		txtCodigoFuente.setBorder(new LineBorder(Color.black));
-		
-		panelDerecho.add(txtCodigoFuente);
-		panelDerecho.add(txtAreaErrores);
+		panelDerecho.add(scroll1); //esto es el codigo fuente
+		panelDerecho.add(scroll2); //esto es el area de errores
 		
 		panelCodigoErrores = new JPanel(new BorderLayout());
 		lblCodigoFuente = new JLabel("Codigo Fuente");
@@ -93,7 +110,7 @@ public class Interfaz extends JFrame implements ActionListener {
 	            fis = new FileInputStream(archivoElegido);
 	            int contenido;
 	            while ((contenido = fis.read()) != -1) {
-	                // convert to char and display it
+	                // convertir a char y añadirlo a la cadena de resultado
 	                resultado += (char) contenido;
 	            }
 	        } catch (IOException ex) {
@@ -118,18 +135,20 @@ public class Interfaz extends JFrame implements ActionListener {
 				String[] lineas = txtCodigoFuente.getText().split("\\n+");	
 				int i = 0;		
 				for (String linea : lineas) {
-					String[] tokens = linea.split("\\s+");
-					i++;
 					//separar caracteres especiales
 					linea = extracted(linea);
-
+					String[] tokens = linea.split("\\s+");
+					i++;
+					
 					for(String token : tokens){
+						if(token.equals("")) continue; //ignorar espacios en blanco
 						tipo=analizador.analizadorDeTokens(token);
 						if(tipo==null){
-							txtAreaErrores.setText(txtAreaErrores.getText()+"\nError lexico en la linea "+i+". <"+ token+"> es invalido.");
+							txtAreaErrores.setText(txtAreaErrores.getText()+"Error lexico en la linea "+i+". <"+ token+"> es invalido.\n");
 							this.revalidate();
 							this.repaint();
-						}
+						}else if (tipo=="id")
+							meterATabla(token);
 					}
 
 				}
@@ -144,6 +163,22 @@ public class Interfaz extends JFrame implements ActionListener {
 		linea=linea.replace(")", " ) ");
 		linea=linea.replace("[", " [ ");
 		linea=linea.replace("]", " ] ");
+		linea=linea.replace("==", " == ");
+		linea=linea.replace("!=", " != ");
+		linea=linea.replace(">", " > ");
+		linea=linea.replace("<", " < ");
+		linea=linea.replace(">=", " >= ");
+		linea=linea.replace("<=", " <= ");
+		linea=linea.replace("+", " + ");
+		linea=linea.replace("-", " - ");
+		linea=linea.replace("*", " * ");
+		linea=linea.replace("/", " / ");
 		return linea;
+	}
+	private void meterATabla(String valor) {
+		if(ids.contains(valor)) return; //no repetir ids
+		tablaSimbolos.setValueAt(valor, cuentaIDs, 0);
+		ids.add(valor);
+		cuentaIDs++;
 	}
 }
