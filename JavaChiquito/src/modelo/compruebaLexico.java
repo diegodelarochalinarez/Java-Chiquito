@@ -14,15 +14,15 @@ public class compruebaLexico {
         public compruebaLexico() {
                 //introducir simbolos especiales
                  this.keywordsAndOperatorsMap = new HashMap<String, String>();
-                 keywordsAndOperatorsMap.put("for", "palabraReservada");
-                 keywordsAndOperatorsMap.put("while", "palabraReservada");
-                 keywordsAndOperatorsMap.put("do" , "palabraReservada");
+                 keywordsAndOperatorsMap.put("for", "palabrareservada");
+                 keywordsAndOperatorsMap.put("while", "palabrareservada");
+                 keywordsAndOperatorsMap.put("do" , "palabrareservada");
                  //DoStmt := do Stmt while ( Expr ) ;
-                 keywordsAndOperatorsMap.put("if" , "palabraReservada");
+                 keywordsAndOperatorsMap.put("if" , "palabrareservada");
                  //IfStmt := if ( Expr ) Stmt (else Stmt)?
-                 keywordsAndOperatorsMap.put("else" , "palabraReservada");
+                 keywordsAndOperatorsMap.put("else" , "palabrareservada");
                  //elseStmt := else (Expr)
-                 keywordsAndOperatorsMap.put("return" , "palabraReservada");
+                 keywordsAndOperatorsMap.put("return" , "palabrareservada");
                  keywordsAndOperatorsMap.put("-" , "unop");
                  //unop : -
                  keywordsAndOperatorsMap.put("+" , "addiop");
@@ -46,7 +46,9 @@ public class compruebaLexico {
                 keywordsAndOperatorsMap.put("[" , "codeblock");
                 keywordsAndOperatorsMap.put("]" , "codeblock");
 
-                //keywordsAndOperatorsMap.put("=" , "assignop");
+                keywordsAndOperatorsMap.put(";" , "linebreak");
+
+                keywordsAndOperatorsMap.put("=" , "assignop"); 
                 
         }
         
