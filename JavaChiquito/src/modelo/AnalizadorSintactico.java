@@ -11,13 +11,15 @@ public class AnalizadorSintactico {
     private Vector<String> tokens;
     private int indiceActual;
     private String errorSintactico;
-    private String todosLosTokensString, armandoEstructura;
+    private String todosLosTokensString;
 
     public AnalizadorSintactico(Vector<String> tokens) {;
         this.tokens = tokens;
         this.indiceActual = 0;
-        for(String token : tokens){
-            todosLosTokensString += token+" ";
+
+        todosLosTokensString = "";
+        for(int i=0; i<tokens.size(); i++){
+            todosLosTokensString = todosLosTokensString+tokens.elementAt(i)+" ";
         }
         System.out.println(todosLosTokensString);
     }
@@ -48,7 +50,8 @@ public class AnalizadorSintactico {
     private boolean esProgram() {
         boolean band=false;
         //Program := (ClassList)? (ClassMethodList)? MainFunc
-        if(evaluarTxt("^ClassList? ClassMethodList? MainFunc",armandoEstructura)){
+        //System.out.println("Evaluando "+todosLosTokensString);
+        if(evaluarTxt("^ClassList? ClassMethodList? MainFunc",todosLosTokensString)){
             band=true;
         }
         return band;
@@ -57,7 +60,7 @@ public class AnalizadorSintactico {
     private boolean esClassList() {
         boolean band=false;
        //ClassList := (Class)+
-        if(evaluarTxt("^Class+",armandoEstructura)){
+        if(evaluarTxt("^Class+",todosLosTokensString)){
 
         }
         return band;
@@ -66,7 +69,7 @@ public class AnalizadorSintactico {
     private boolean esClass() {
         boolean band=false;
        //Class := class id { (private : Member)? (public : Member)? } 
-        if(evaluarTxt("^class id { private?|Member? public?|member? }",armandoEstructura)){
+        if(evaluarTxt("^class id\\{ private|Member? public|member? \\}",todosLosTokensString)){
 
         }
         return band;
@@ -75,7 +78,7 @@ public class AnalizadorSintactico {
     private boolean esMember() {
         boolean band=false;
        //Member := (VarDeclList)? (MethodDeclList)? (MethodDefList)? 
-        if(evaluarTxt("VarDecList? MethodDecList? MethodDefList?",armandoEstructura)){
+        if(evaluarTxt("VarDecList? MethodDecList?\sMethodDefList?",todosLosTokensString)){
 
         }
         return band;
@@ -83,7 +86,7 @@ public class AnalizadorSintactico {
      private boolean esVarDecList() {
         boolean band=false;
        //VarDeclList := (VarDecl)+ 
-        if(evaluarTxt("VarDecl+ MethodDecList MethodDefList?",armandoEstructura)){
+        if(evaluarTxt("VarDecl+ MethodDecList MethodDefList?",todosLosTokensString)){
 
         }
         return band;
@@ -91,7 +94,7 @@ public class AnalizadorSintactico {
     private boolean esMethodDecList() {
         boolean band=false;
       // MethodDeclList := (FuncDecl)+
-        if(evaluarTxt("",armandoEstructura)){
+        if(evaluarTxt("",todosLosTokensString)){
 
         }
         return band;
@@ -99,7 +102,7 @@ public class AnalizadorSintactico {
      private boolean esMethodDefList() {
         boolean band=false;
       //MethodDefList := (FuncDef)+
-        if(evaluarTxt("",armandoEstructura)){
+        if(evaluarTxt("",todosLosTokensString)){
 
         }
         return band;
@@ -107,7 +110,7 @@ public class AnalizadorSintactico {
     private boolean esVarDecl() {
         boolean band=false;
       //VarDecl := Type Ident (= (int | float))? ; 
-        if(evaluarTxt("",armandoEstructura)){
+        if(evaluarTxt("",todosLosTokensString)){
 
         }
         return band;
@@ -115,7 +118,7 @@ public class AnalizadorSintactico {
     private boolean esFuncDecl() {
         boolean band=false;
       //FuncDecl := Type id ( (ParamList)? ) ;
-        if(evaluarTxt("",armandoEstructura)){
+        if(evaluarTxt("",todosLosTokensString)){
 
         }
         return band;
@@ -123,7 +126,7 @@ public class AnalizadorSintactico {
     private boolean esFuncDef() {
         boolean band=false;
       //FuncDef := Type id ( (ParamList)? ) CompoundStmt
-        if(evaluarTxt("",armandoEstructura)){
+        if(evaluarTxt("",todosLosTokensString)){
 
         }
         return band;
@@ -131,7 +134,7 @@ public class AnalizadorSintactico {
     private boolean esClassMethodList() {
         boolean band=false;
       //ClassMethodList := (ClassMethodDef)+
-        if(evaluarTxt("",armandoEstructura)){
+        if(evaluarTxt("",todosLosTokensString)){
 
         }
         return band;
@@ -139,7 +142,7 @@ public class AnalizadorSintactico {
 private boolean esClassMethodDef() {
         boolean band=false;
       //ClassMethodDef := Type id :: id ( (ParamList)? ) CompoundStmt
-        if(evaluarTxt("",armandoEstructura)){
+        if(evaluarTxt("",todosLosTokensString)){
 
         }
         return band;
@@ -147,7 +150,7 @@ private boolean esClassMethodDef() {
 private boolean esMainFunc() {
         boolean band=false;
       //MainFunc := int main ( ) CompoundStmt
-        if(evaluarTxt("",armandoEstructura)){
+        if(evaluarTxt("",todosLosTokensString)){
 
         }
         return band;
@@ -155,7 +158,7 @@ private boolean esMainFunc() {
 private boolean esParamList() {
         boolean band=false;
       //ParamList := Param (, Param)*
-        if(evaluarTxt("",armandoEstructura)){
+        if(evaluarTxt("",todosLosTokensString)){
 
         }
         return band;
@@ -163,7 +166,7 @@ private boolean esParamList() {
 private boolean esParam() {
         boolean band=false;
       //Param := Type Ident
-        if(evaluarTxt("",armandoEstructura)){
+        if(evaluarTxt("",todosLosTokensString)){
 
         }
         return band;
@@ -172,7 +175,7 @@ private boolean esParam() {
 private boolean esIdent() {
         boolean band=false;
       //Ident := id | id [ intnum ]
-        if(evaluarTxt("",armandoEstructura)){
+        if(evaluarTxt("",todosLosTokensString)){
 
         }
         return band;
@@ -180,7 +183,7 @@ private boolean esIdent() {
 private boolean esType() {
         boolean band=false;
       //Type := int | float | id
-        if(evaluarTxt("",armandoEstructura)){
+        if(evaluarTxt("",todosLosTokensString)){
 
         }
         return band;
@@ -188,7 +191,7 @@ private boolean esType() {
 private boolean esCompoundStmt() {
         boolean band=false;
       //CompoundStmt := { (VarDeclList)? (StmtList)? }
-        if(evaluarTxt("",armandoEstructura)){
+        if(evaluarTxt("",todosLosTokensString)){
 
         }
         return band;
@@ -197,7 +200,7 @@ private boolean esCompoundStmt() {
 private boolean esStmtList() {
         boolean band=false;
       //StmtList := (Stmt)+
-        if(evaluarTxt("",armandoEstructura)){
+        if(evaluarTxt("",todosLosTokensString)){
 
         }
         return band;
@@ -205,7 +208,7 @@ private boolean esStmtList() {
 private boolean esStmt() {
         boolean band=false;
       //Stmt := ExprStmt| AssignStmt | RetStmt | WhileStmt | DoStmt | ForStmt | IfStmt | CompoundStmt | ;
-        if(evaluarTxt("",armandoEstructura)){
+        if(evaluarTxt("",todosLosTokensString)){
 
         }
         return band;
@@ -213,7 +216,7 @@ private boolean esStmt() {
 private boolean esExprStmt() {
         boolean band=false;
       //Stmt := ExprStmt := Expr ;
-        if(evaluarTxt("",armandoEstructura)){
+        if(evaluarTxt("",todosLosTokensString)){
 
         }
         return band;
@@ -221,7 +224,7 @@ private boolean esExprStmt() {
 private boolean esAssignStmt() {
         boolean band=false;
       //Stmt := AssignStmt := RefVarExpr = Expr ;
-        if(evaluarTxt("",armandoEstructura)){
+        if(evaluarTxt("",todosLosTokensString)){
 
         }
         return band;
@@ -230,7 +233,7 @@ private boolean esAssignStmt() {
 private boolean esRetStmt() {
         boolean band=false;
       //RetStmt := return (Expr)? ;
-        if(evaluarTxt("",armandoEstructura)){
+        if(evaluarTxt("",todosLosTokensString)){
 
         }
         return band;
@@ -239,7 +242,7 @@ private boolean esRetStmt() {
   private boolean esWhileStmt() {
         boolean band=false;
       //WhileStmt := while ( Expr ) Stmt
-        if(evaluarTxt("",armandoEstructura)){
+        if(evaluarTxt("",todosLosTokensString)){
 
         }
         return band;
@@ -248,7 +251,7 @@ private boolean esRetStmt() {
   private boolean esDoStmt() {
         boolean band=false;
       //DoStmt := do Stmt while ( Expr ) ;
-        if(evaluarTxt("",armandoEstructura)){
+        if(evaluarTxt("",todosLosTokensString)){
 
         }
         return band;
@@ -256,7 +259,7 @@ private boolean esRetStmt() {
   private boolean esForStmt() {
         boolean band=false;
       //ForStmt := for ( Expr ; Expr ; Expr ) Stmt
-        if(evaluarTxt("",armandoEstructura)){
+        if(evaluarTxt("",todosLosTokensString)){
 
         }
         return band;
@@ -264,7 +267,7 @@ private boolean esRetStmt() {
 private boolean esIfStmt() {
         boolean band=false;
       //IfStmt := if ( Expr ) Stmt (else Stmt)?
-        if(evaluarTxt("",armandoEstructura)){
+        if(evaluarTxt("",todosLosTokensString)){
 
         }
         return band;
@@ -272,7 +275,7 @@ private boolean esIfStmt() {
     private boolean esExpr() {
         boolean band=false;
       //Expr := OperExpr| RefExpr | intnum | floatnum
-        if(evaluarTxt("",armandoEstructura)){
+        if(evaluarTxt("",todosLosTokensString)){
 
         }
         return band;
@@ -280,7 +283,7 @@ private boolean esIfStmt() {
      private boolean esOperExpr() {
         boolean band=false;
       //OperExpr := unop Expr | Expr addiop Expr | Expr multop Expr | Expr relaop Expr | Expr eqltop Expr | ( Expr )
-        if(evaluarTxt("",armandoEstructura)){
+        if(evaluarTxt("",todosLosTokensString)){
 
         }
         return band;
@@ -288,7 +291,7 @@ private boolean esIfStmt() {
     private boolean esRefExpr() {
         boolean band=false;
       //RefExpr := RefVarExpr | RefCallExpr
-        if(evaluarTxt("",armandoEstructura)){
+        if(evaluarTxt("",todosLosTokensString)){
 
         }
         return band;
@@ -297,7 +300,7 @@ private boolean esRefVarExpr() {
         boolean band=false;
       //RefVarExpr := (RefExpr .)? IdentExpr
 
-        if(evaluarTxt("",armandoEstructura)){
+        if(evaluarTxt("",todosLosTokensString)){
 
         }
         return band;
@@ -306,7 +309,7 @@ private boolean esRefCallExpr() {
         boolean band=false;
       //RefCallExpr := (RefExpr .)? CallExpr
 
-        if(evaluarTxt("",armandoEstructura)){
+        if(evaluarTxt("",todosLosTokensString)){
 
         }
         return band;
@@ -315,7 +318,7 @@ private boolean esIdentExpr() {
         boolean band=false;
       //IdentExpr := id [ Expr ] | id
 
-        if(evaluarTxt("",armandoEstructura)){
+        if(evaluarTxt("",todosLosTokensString)){
 
         }
         return band;
@@ -324,7 +327,7 @@ private boolean esCallExpr() {
         boolean band=false;
       //CallExpr := id ( (ArgList)? )
 
-        if(evaluarTxt("",armandoEstructura)){
+        if(evaluarTxt("",todosLosTokensString)){
 
         }
         return band;
@@ -333,7 +336,7 @@ private boolean esArgList() {
         boolean band=false;
       //ArgList := Expr (, Expr)*
 
-        if(evaluarTxt("",armandoEstructura)){
+        if(evaluarTxt("",todosLosTokensString)){
 
         }
         return band;
