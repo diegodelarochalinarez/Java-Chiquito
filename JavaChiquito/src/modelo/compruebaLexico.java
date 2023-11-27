@@ -7,22 +7,23 @@ import java.util.regex.Pattern;
 /**
  * compruebaLexico
  */
-public class compruebaLexico {
+public class CompruebaLexico {
     
         private HashMap<String, String> keywordsAndOperatorsMap;
 
-        public compruebaLexico() {
+        public CompruebaLexico() {
                 //introducir simbolos especiales
                  this.keywordsAndOperatorsMap = new HashMap<String, String>();
-                 keywordsAndOperatorsMap.put("for", "palabrareservada");
-                 keywordsAndOperatorsMap.put("while", "palabrareservada");
-                 keywordsAndOperatorsMap.put("do" , "palabrareservada");
+                 keywordsAndOperatorsMap.put("for", "prFor");
+                 keywordsAndOperatorsMap.put("while", "prWhile");
+                 keywordsAndOperatorsMap.put("do" , "prDo");
                  //DoStmt := do Stmt while ( Expr ) ;
-                 keywordsAndOperatorsMap.put("if" , "palabrareservada");
+                 keywordsAndOperatorsMap.put("if" , "prIf");
                  //IfStmt := if ( Expr ) Stmt (else Stmt)?
-                 keywordsAndOperatorsMap.put("else" , "palabrareservada");
+                 keywordsAndOperatorsMap.put("else" , "prElse");
                  //elseStmt := else (Expr)
-                 keywordsAndOperatorsMap.put("return" , "palabrareservada");
+                 keywordsAndOperatorsMap.put("return" , "prReturn");
+                  keywordsAndOperatorsMap.put("class" , "prClass");
                  keywordsAndOperatorsMap.put("-" , "unop");
                  //unop : -
                  keywordsAndOperatorsMap.put("+" , "addiop");

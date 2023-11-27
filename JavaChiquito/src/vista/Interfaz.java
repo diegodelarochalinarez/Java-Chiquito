@@ -7,9 +7,10 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
-import modelo.compruebaLexico;
+import modelo.AnalizadorSintactico;
+import modelo.CompruebaLexico;
 
-public class Interfaz extends JFrame implements ActionListener {
+public class Interfaz extends JFrame implements ActionListener, KeyListener {
 	private static final long serialVersionUID = 8477793022822429026L;
 	
 	private JButton btnArchivos, btnAnalisisLexico, btnAnalisisSintactico;
@@ -19,13 +20,16 @@ public class Interfaz extends JFrame implements ActionListener {
 	private JTextArea txtCodigoFuente, txtAreaErrores, txtTokenizer;
 	private File archivoElegido;
 	private int cuentaIDs;
-	private Vector<String> ids;
+	private Vector<String> ids, todosLosTokens;
+	private String todosLosTokensString;
+	private boolean bandErrorLexico;
 	
 	public Interfaz() {
 		super("Analizador de lenguaje");
 		
 		cuentaIDs=0;
 		ids=new Vector<String>();
+		todosLosTokens=new Vector<String>();
 
 		hazInterfaz();
 		hazEscuchas();
@@ -33,6 +37,8 @@ public class Interfaz extends JFrame implements ActionListener {
 	private void hazEscuchas() {
 		btnArchivos.addActionListener(this);
 		btnAnalisisLexico.addActionListener(this);
+		btnAnalisisSintactico.addActionListener(this);
+		txtCodigoFuente.addKeyListener(this);
 	}
 	private void hazInterfaz() {
 		setSize(1280, 720);
@@ -136,11 +142,13 @@ public class Interfaz extends JFrame implements ActionListener {
 	        }
 			
 			txtCodigoFuente.setText(resultado);
+			btnAnalisisSintactico.setEnabled(false);
 			return;
 		}
 
 		if(e.getSource().equals(btnAnalisisLexico)) { 
 			//Aqui va el codigo para el analisis lexico
+			bandErrorLexico=false;
 			txtAreaErrores.setText("");
 			txtTokenizer.setText("");
 			
@@ -153,10 +161,11 @@ public class Interfaz extends JFrame implements ActionListener {
 			   
 			
 				//iniciar analisis lexico
-				compruebaLexico analizador = new compruebaLexico();
+				CompruebaLexico analizador = new CompruebaLexico();
 				String tipo;
 				String[] lineas = txtCodigoFuente.getText().split("\\n+");	
 				int i = 0;		
+				
 				for (String linea : lineas) {
 					//separar caracteres especiales
 					linea = extracted(linea);
@@ -165,28 +174,34 @@ public class Interfaz extends JFrame implements ActionListener {
 					
 					for(String token : tokens){
 						if(token.equals("")) continue; //ignorar espacios en blanco
+
 						tipo=analizador.analizadorDeTokens(token);
 						if(tipo==null){
+							bandErrorLexico=true; //hubo un error, no activar analisis sintactico
 							txtAreaErrores.setText(txtAreaErrores.getText()+"Error lexico en la linea "+i+". <"+ token+"> es invalido.\n");
 							this.revalidate();
 							this.repaint();
 						}else{
+							
 							txtTokenizer.setText(txtTokenizer.getText()+token+" » "+ tipo+"\n");
 						}
 						if (tipo=="id"){
 							meterATabla(token);
 						}
-							
+						todosLosTokens.add(tipo);
 					}
 
 				}
-				this.btnAnalisisSintactico.setEnabled(true);
+				if(!bandErrorLexico)
+					this.btnAnalisisSintactico.setEnabled(true);
 				//this.btnAnalisisLexico.setEnabled(false);
 	        return;
 		}
 
 		if(e.getSource().equals(btnAnalisisSintactico)) { 
 			//Aqui va el codigo para el analisis sintactico
+			AnalizadorSintactico analizadorSintactico = new AnalizadorSintactico(todosLosTokens);
+			analizadorSintactico.analizar();
 			return;
 		}
 
@@ -217,16 +232,19 @@ public class Interfaz extends JFrame implements ActionListener {
 		for(int i=0; i<linea.length(); i++){
 			if(linea.charAt(i)!='=')
 				continue;
-			if(linea.charAt(i+1)=='='){
+			else if(linea.charAt(i+1)=='='){
 				i++; continue;
 			}
-			if(linea.charAt(i-1)=='<' || linea.charAt(i-1)=='>' || linea.charAt(i-1)=='!' || linea.charAt(i-1)=='='){
+			else if(linea.charAt(i-1)=='<' || linea.charAt(i-1)=='>' || linea.charAt(i-1)=='!' || linea.charAt(i-1)=='='){
 				continue;
+			}else{
+				linea = linea.substring(0,i)+" = "+linea.substring(i+1);
+				i+=2;
+				System.out.println(linea);
 			}
-			linea = linea.substring(0,i-1)+" = "+linea.substring(i+1);
-			System.out.println(linea);
+			
+			
 		}
-		arregloChars.toString();
 		
 		return linea;
 	}
@@ -235,5 +253,15 @@ public class Interfaz extends JFrame implements ActionListener {
 		tablaSimbolos.setValueAt(valor, cuentaIDs, 0);
 		ids.add(valor);
 		cuentaIDs++;
+	}
+	@Override
+	public void keyPressed(KeyEvent arg0) {
+	}
+	@Override
+	public void keyReleased(KeyEvent arg0) {
+		btnAnalisisSintactico.setEnabled(false);
+	}
+	@Override
+	public void keyTyped(KeyEvent arg0) {
 	}
 }
