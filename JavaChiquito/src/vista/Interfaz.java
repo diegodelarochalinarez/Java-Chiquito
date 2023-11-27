@@ -21,7 +21,6 @@ public class Interfaz extends JFrame implements ActionListener, KeyListener {
 	private File archivoElegido;
 	private int cuentaIDs;
 	private Vector<String> ids, todosLosTokens;
-	private String todosLosTokensString;
 	private boolean bandErrorLexico;
 	
 	public Interfaz() {
@@ -227,8 +226,6 @@ public class Interfaz extends JFrame implements ActionListener, KeyListener {
 		linea=linea.replace(";", " ; ");
 
 		if(!linea.contains("=")) return linea;
-
-		char[] arregloChars = linea.toCharArray();
 		for(int i=0; i<linea.length(); i++){
 			if(linea.charAt(i)!='=')
 				continue;
@@ -240,7 +237,6 @@ public class Interfaz extends JFrame implements ActionListener, KeyListener {
 			}else{
 				linea = linea.substring(0,i)+" = "+linea.substring(i+1);
 				i+=2;
-				System.out.println(linea);
 			}
 			
 			
