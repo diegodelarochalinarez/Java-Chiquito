@@ -159,38 +159,6 @@ public class Interfaz extends JFrame implements ActionListener, KeyListener {
 			}
 			   
 			
-				//iniciar analisis lexico
-				CompruebaLexico analizador = new CompruebaLexico();
-				String tipo;
-				String[] lineas = txtCodigoFuente.getText().split("\\n+");	
-				int i = 0;		
-				
-				for (String linea : lineas) {
-					//separar caracteres especiales
-					linea = extracted(linea);
-					String[] tokens = linea.split("\\s+");
-					i++;
-					
-					for(String token : tokens){
-						if(token.equals("")) continue; //ignorar espacios en blanco
-
-						tipo=analizador.analizadorDeTokens(token);
-						if(tipo==null){
-							bandErrorLexico=true; //hubo un error, no activar analisis sintactico
-							txtAreaErrores.setText(txtAreaErrores.getText()+"Error lexico en la linea "+i+". <"+ token+"> es invalido.\n");
-							this.revalidate();
-							this.repaint();
-						}else{
-							
-							txtTokenizer.setText(txtTokenizer.getText()+token+" » "+ tipo+"\n");
-						}
-						if (tipo=="id"){
-							meterATabla(token);
-						}
-						todosLosTokens.add(tipo);
-					}
-
-				}
 				if(!bandErrorLexico)
 					this.btnAnalisisSintactico.setEnabled(true);
 				//this.btnAnalisisLexico.setEnabled(false);
