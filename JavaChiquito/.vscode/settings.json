@@ -1,0 +1,12 @@
+{
+    "java.project.sourcePaths": [
+        "src"
+    ],
+    "java.project.outputPath": "bin",
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "C:\\Users\\Payin\\Downloads\\Edgar/Visual studio code\\librerias\\java_cup.jar",
+        "C:\\Users\\Payin\\Downloads\\Edgar/Visual studio code\\librerias\\java_cup-11a.jar",
+        "C:\\Users\\Payin\\Downloads\\Edgar/Visual studio code\\librerias\\JFlex.jar",
+    ]
+}
